@@ -1,10 +1,9 @@
 import {IWallet, Contract, Transaction, TransactionReceipt, Utils, BigNumber, Event, IBatchRequestObj} from "@ijstech/eth-wallet";
-import Bin from "./ValidVestingVault.json";
+import Bin from "./ScomAirdropVault.json";
 
 export interface IDeployParams {name:string;symbol:string}
 export interface IApproveParams {to:string;tokenId:number|BigNumber}
 export interface ICampaignLocksParams {param1:number|BigNumber;param2:number|BigNumber}
-export interface IDirectLockParams {campaignId:number|BigNumber;recipient:string;amount:number|BigNumber;startDate:number|BigNumber;endDate:number|BigNumber}
 export interface IIsApprovedForAllParams {owner:string;operator:string}
 export interface IIsLockIdVerifiedParams {param1:string;param2:number|BigNumber}
 export interface IMerkleLockParams {campaignId:number|BigNumber;amount:number|BigNumber;merkleRoot:string;dataUri:string}
@@ -17,7 +16,7 @@ export interface ITransferFromParams {from:string;to:string;tokenId:number|BigNu
 export interface IUpdateCampaignParams {campaignId:number|BigNumber;dataUri:string}
 export interface IVerifyMerkleLockParams {lockId:number|BigNumber;campaignId:number|BigNumber;amount:number|BigNumber;startDate:number|BigNumber;endDate:number|BigNumber;proof:string[]}
 export interface IWithdrawFundParams {token:string;amount:number|BigNumber}
-export class ValidVestingVault extends Contract{
+export class ScomAirdropVault extends Contract{
     constructor(wallet: IWallet, address?: string){
         super(wallet, address, Bin.abi, Bin.bytecode);
         this.assign()
@@ -25,10 +24,10 @@ export class ValidVestingVault extends Contract{
     deploy(params: IDeployParams): Promise<string>{
         return this.__deploy([params.name,params.symbol]);
     }
-    parseApprovalEvent(receipt: TransactionReceipt): ValidVestingVault.ApprovalEvent[]{
+    parseApprovalEvent(receipt: TransactionReceipt): ScomAirdropVault.ApprovalEvent[]{
         return this.parseEvents(receipt, "Approval").map(e=>this.decodeApprovalEvent(e));
     }
-    decodeApprovalEvent(event: Event): ValidVestingVault.ApprovalEvent{
+    decodeApprovalEvent(event: Event): ScomAirdropVault.ApprovalEvent{
         let result = event.data;
         return {
             owner: result.owner,
@@ -37,10 +36,10 @@ export class ValidVestingVault extends Contract{
             _event: event
         };
     }
-    parseApprovalForAllEvent(receipt: TransactionReceipt): ValidVestingVault.ApprovalForAllEvent[]{
+    parseApprovalForAllEvent(receipt: TransactionReceipt): ScomAirdropVault.ApprovalForAllEvent[]{
         return this.parseEvents(receipt, "ApprovalForAll").map(e=>this.decodeApprovalForAllEvent(e));
     }
-    decodeApprovalForAllEvent(event: Event): ValidVestingVault.ApprovalForAllEvent{
+    decodeApprovalForAllEvent(event: Event): ScomAirdropVault.ApprovalForAllEvent{
         let result = event.data;
         return {
             owner: result.owner,
@@ -49,20 +48,20 @@ export class ValidVestingVault extends Contract{
             _event: event
         };
     }
-    parseAuthorizeEvent(receipt: TransactionReceipt): ValidVestingVault.AuthorizeEvent[]{
+    parseAuthorizeEvent(receipt: TransactionReceipt): ScomAirdropVault.AuthorizeEvent[]{
         return this.parseEvents(receipt, "Authorize").map(e=>this.decodeAuthorizeEvent(e));
     }
-    decodeAuthorizeEvent(event: Event): ValidVestingVault.AuthorizeEvent{
+    decodeAuthorizeEvent(event: Event): ScomAirdropVault.AuthorizeEvent{
         let result = event.data;
         return {
             user: result.user,
             _event: event
         };
     }
-    parseClaimEvent(receipt: TransactionReceipt): ValidVestingVault.ClaimEvent[]{
+    parseClaimEvent(receipt: TransactionReceipt): ScomAirdropVault.ClaimEvent[]{
         return this.parseEvents(receipt, "Claim").map(e=>this.decodeClaimEvent(e));
     }
-    decodeClaimEvent(event: Event): ValidVestingVault.ClaimEvent{
+    decodeClaimEvent(event: Event): ScomAirdropVault.ClaimEvent{
         let result = event.data;
         return {
             nftId: new BigNumber(result.nftId),
@@ -72,10 +71,10 @@ export class ValidVestingVault extends Contract{
             _event: event
         };
     }
-    parseCreateVestingEvent(receipt: TransactionReceipt): ValidVestingVault.CreateVestingEvent[]{
+    parseCreateVestingEvent(receipt: TransactionReceipt): ScomAirdropVault.CreateVestingEvent[]{
         return this.parseEvents(receipt, "CreateVesting").map(e=>this.decodeCreateVestingEvent(e));
     }
-    decodeCreateVestingEvent(event: Event): ValidVestingVault.CreateVestingEvent{
+    decodeCreateVestingEvent(event: Event): ScomAirdropVault.CreateVestingEvent{
         let result = event.data;
         return {
             campaignId: new BigNumber(result.campaignId),
@@ -87,20 +86,20 @@ export class ValidVestingVault extends Contract{
             _event: event
         };
     }
-    parseDeauthorizeEvent(receipt: TransactionReceipt): ValidVestingVault.DeauthorizeEvent[]{
+    parseDeauthorizeEvent(receipt: TransactionReceipt): ScomAirdropVault.DeauthorizeEvent[]{
         return this.parseEvents(receipt, "Deauthorize").map(e=>this.decodeDeauthorizeEvent(e));
     }
-    decodeDeauthorizeEvent(event: Event): ValidVestingVault.DeauthorizeEvent{
+    decodeDeauthorizeEvent(event: Event): ScomAirdropVault.DeauthorizeEvent{
         let result = event.data;
         return {
             user: result.user,
             _event: event
         };
     }
-    parseLockEvent(receipt: TransactionReceipt): ValidVestingVault.LockEvent[]{
+    parseLockEvent(receipt: TransactionReceipt): ScomAirdropVault.LockEvent[]{
         return this.parseEvents(receipt, "Lock").map(e=>this.decodeLockEvent(e));
     }
-    decodeLockEvent(event: Event): ValidVestingVault.LockEvent{
+    decodeLockEvent(event: Event): ScomAirdropVault.LockEvent{
         let result = event.data;
         return {
             lockId: new BigNumber(result.lockId),
@@ -110,10 +109,10 @@ export class ValidVestingVault extends Contract{
             _event: event
         };
     }
-    parseMintEvent(receipt: TransactionReceipt): ValidVestingVault.MintEvent[]{
+    parseMintEvent(receipt: TransactionReceipt): ScomAirdropVault.MintEvent[]{
         return this.parseEvents(receipt, "Mint").map(e=>this.decodeMintEvent(e));
     }
-    decodeMintEvent(event: Event): ValidVestingVault.MintEvent{
+    decodeMintEvent(event: Event): ScomAirdropVault.MintEvent{
         let result = event.data;
         return {
             campaignId: new BigNumber(result.campaignId),
@@ -122,10 +121,10 @@ export class ValidVestingVault extends Contract{
             _event: event
         };
     }
-    parseNewCampaignEvent(receipt: TransactionReceipt): ValidVestingVault.NewCampaignEvent[]{
+    parseNewCampaignEvent(receipt: TransactionReceipt): ScomAirdropVault.NewCampaignEvent[]{
         return this.parseEvents(receipt, "NewCampaign").map(e=>this.decodeNewCampaignEvent(e));
     }
-    decodeNewCampaignEvent(event: Event): ValidVestingVault.NewCampaignEvent{
+    decodeNewCampaignEvent(event: Event): ScomAirdropVault.NewCampaignEvent{
         let result = event.data;
         return {
             campaignId: new BigNumber(result.campaignId),
@@ -133,20 +132,20 @@ export class ValidVestingVault extends Contract{
             _event: event
         };
     }
-    parseStartOwnershipTransferEvent(receipt: TransactionReceipt): ValidVestingVault.StartOwnershipTransferEvent[]{
+    parseStartOwnershipTransferEvent(receipt: TransactionReceipt): ScomAirdropVault.StartOwnershipTransferEvent[]{
         return this.parseEvents(receipt, "StartOwnershipTransfer").map(e=>this.decodeStartOwnershipTransferEvent(e));
     }
-    decodeStartOwnershipTransferEvent(event: Event): ValidVestingVault.StartOwnershipTransferEvent{
+    decodeStartOwnershipTransferEvent(event: Event): ScomAirdropVault.StartOwnershipTransferEvent{
         let result = event.data;
         return {
             user: result.user,
             _event: event
         };
     }
-    parseTransferEvent(receipt: TransactionReceipt): ValidVestingVault.TransferEvent[]{
+    parseTransferEvent(receipt: TransactionReceipt): ScomAirdropVault.TransferEvent[]{
         return this.parseEvents(receipt, "Transfer").map(e=>this.decodeTransferEvent(e));
     }
-    decodeTransferEvent(event: Event): ValidVestingVault.TransferEvent{
+    decodeTransferEvent(event: Event): ScomAirdropVault.TransferEvent{
         let result = event.data;
         return {
             from: result.from,
@@ -155,20 +154,20 @@ export class ValidVestingVault extends Contract{
             _event: event
         };
     }
-    parseTransferOwnershipEvent(receipt: TransactionReceipt): ValidVestingVault.TransferOwnershipEvent[]{
+    parseTransferOwnershipEvent(receipt: TransactionReceipt): ScomAirdropVault.TransferOwnershipEvent[]{
         return this.parseEvents(receipt, "TransferOwnership").map(e=>this.decodeTransferOwnershipEvent(e));
     }
-    decodeTransferOwnershipEvent(event: Event): ValidVestingVault.TransferOwnershipEvent{
+    decodeTransferOwnershipEvent(event: Event): ScomAirdropVault.TransferOwnershipEvent{
         let result = event.data;
         return {
             user: result.user,
             _event: event
         };
     }
-    parseUpdateCampaignEvent(receipt: TransactionReceipt): ValidVestingVault.UpdateCampaignEvent[]{
+    parseUpdateCampaignEvent(receipt: TransactionReceipt): ScomAirdropVault.UpdateCampaignEvent[]{
         return this.parseEvents(receipt, "UpdateCampaign").map(e=>this.decodeUpdateCampaignEvent(e));
     }
-    decodeUpdateCampaignEvent(event: Event): ValidVestingVault.UpdateCampaignEvent{
+    decodeUpdateCampaignEvent(event: Event): ScomAirdropVault.UpdateCampaignEvent{
         let result = event.data;
         return {
             campaignId: new BigNumber(result.campaignId),
@@ -214,10 +213,6 @@ export class ValidVestingVault extends Contract{
         (user:string): Promise<TransactionReceipt>;
         call: (user:string) => Promise<void>;
     }
-    directLock: {
-        (params: IDirectLockParams): Promise<TransactionReceipt>;
-        call: (params: IDirectLockParams) => Promise<BigNumber>;
-    }
     factory: {
         (): Promise<string>;
     }
@@ -237,7 +232,7 @@ export class ValidVestingVault extends Contract{
         (param1:string): Promise<BigNumber>;
     }
     locks: {
-        (param1:number|BigNumber): Promise<{lockType:BigNumber,vestingId:BigNumber,dataUri:string,root:string,dateCreated:BigNumber}>;
+        (param1:number|BigNumber): Promise<{vestingId:BigNumber,dataUri:string,root:string,dateCreated:BigNumber}>;
     }
     locksLength: {
         (): Promise<BigNumber>;
@@ -324,10 +319,6 @@ export class ValidVestingVault extends Contract{
     updateCampaign: {
         (params: IUpdateCampaignParams): Promise<TransactionReceipt>;
         call: (params: IUpdateCampaignParams) => Promise<void>;
-    }
-    verifyDirectLock: {
-        (lockId:number|BigNumber): Promise<TransactionReceipt>;
-        call: (lockId:number|BigNumber) => Promise<BigNumber>;
     }
     verifyMerkleLock: {
         (params: IVerifyMerkleLockParams): Promise<TransactionReceipt>;
@@ -429,10 +420,9 @@ export class ValidVestingVault extends Contract{
             return new BigNumber(result);
         }
         this.isPermitted = isPermitted_call
-        let locks_call = async (param1:number|BigNumber): Promise<{lockType:BigNumber,vestingId:BigNumber,dataUri:string,root:string,dateCreated:BigNumber}> => {
+        let locks_call = async (param1:number|BigNumber): Promise<{vestingId:BigNumber,dataUri:string,root:string,dateCreated:BigNumber}> => {
             let result = await this.call('locks',[Utils.toString(param1)]);
             return {
-                lockType: new BigNumber(result.lockType),
                 vestingId: new BigNumber(result.vestingId),
                 dataUri: result.dataUri,
                 root: result.root,
@@ -578,18 +568,6 @@ export class ValidVestingVault extends Contract{
         this.deny = Object.assign(deny_send, {
             call:deny_call
         });
-        let directLockParams = (params: IDirectLockParams) => [Utils.toString(params.campaignId),params.recipient,Utils.toString(params.amount),Utils.toString(params.startDate),Utils.toString(params.endDate)];
-        let directLock_send = async (params: IDirectLockParams): Promise<TransactionReceipt> => {
-            let result = await this.send('directLock',directLockParams(params));
-            return result;
-        }
-        let directLock_call = async (params: IDirectLockParams): Promise<BigNumber> => {
-            let result = await this.call('directLock',directLockParams(params));
-            return new BigNumber(result);
-        }
-        this.directLock = Object.assign(directLock_send, {
-            call:directLock_call
-        });
         let merkleLockParams = (params: IMerkleLockParams) => [Utils.toString(params.campaignId),Utils.toString(params.amount),Utils.stringToBytes32(params.merkleRoot),params.dataUri];
         let merkleLock_send = async (params: IMerkleLockParams): Promise<TransactionReceipt> => {
             let result = await this.send('merkleLock',merkleLockParams(params));
@@ -718,17 +696,6 @@ export class ValidVestingVault extends Contract{
         this.updateCampaign = Object.assign(updateCampaign_send, {
             call:updateCampaign_call
         });
-        let verifyDirectLock_send = async (lockId:number|BigNumber): Promise<TransactionReceipt> => {
-            let result = await this.send('verifyDirectLock',[Utils.toString(lockId)]);
-            return result;
-        }
-        let verifyDirectLock_call = async (lockId:number|BigNumber): Promise<BigNumber> => {
-            let result = await this.call('verifyDirectLock',[Utils.toString(lockId)]);
-            return new BigNumber(result);
-        }
-        this.verifyDirectLock = Object.assign(verifyDirectLock_send, {
-            call:verifyDirectLock_call
-        });
         let verifyMerkleLockParams = (params: IVerifyMerkleLockParams) => [Utils.toString(params.lockId),Utils.toString(params.campaignId),Utils.toString(params.amount),Utils.toString(params.startDate),Utils.toString(params.endDate),Utils.stringToBytes32(params.proof)];
         let verifyMerkleLock_send = async (params: IVerifyMerkleLockParams): Promise<TransactionReceipt> => {
             let result = await this.send('verifyMerkleLock',verifyMerkleLockParams(params));
@@ -755,7 +722,7 @@ export class ValidVestingVault extends Contract{
         });
     }
 }
-export module ValidVestingVault{
+export module ScomAirdropVault{
     export interface ApprovalEvent {owner:string,approved:string,tokenId:BigNumber,_event:Event}
     export interface ApprovalForAllEvent {owner:string,operator:string,approved:boolean,_event:Event}
     export interface AuthorizeEvent {user:string,_event:Event}

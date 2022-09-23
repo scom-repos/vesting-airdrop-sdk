@@ -1,6 +1,6 @@
 import { BigNumber, Utils, Wallet } from "@ijstech/eth-wallet";
 import { ILockInfo, IVestingItem, VestingTreeABI } from "./common";
-import { ValidVestingVault } from "./contracts";
+import { ScomAirdropVault } from "../contracts";
 
 export interface IMyClaims {
     campaignId: number;
@@ -19,23 +19,13 @@ export interface IMerkleInfo {
     root: string;
 }
 
-export interface IDirectLockInfo {
-    id: number;
-    campaignId: BigNumber;
-    recipient: string;
-    amount: BigNumber;
-    startDate: BigNumber;
-    endDate: BigNumber;
-    status: BigNumber;
-}
-
 export async function doVerifyMerkleLock(
     wallet: Wallet,
     contractAddress: string,
     lockId: number,
     vestingData: IVestingItem[]
 ) {
-    const vesting = new ValidVestingVault(wallet, contractAddress);
+    const vesting = new ScomAirdropVault(wallet, contractAddress);
     const merkleInfo = await vesting.locks(lockId);
     let proof = Utils.getWhitelistTreeProof(wallet, merkleInfo.root, vestingData, VestingTreeABI);
     let vestingItem = vestingData.find(v => v.account == wallet.address);
@@ -51,19 +41,9 @@ export async function doVerifyMerkleLock(
     return receipt;
 }
 
-export async function doVerifyDirectLock(
-    wallet: Wallet,
-    contractAddress: string,
-    vestingId: number
-) {
-    const vesting = new ValidVestingVault(wallet, contractAddress);
-    let receipt = await vesting.verifyDirectLock(vestingId)
-    return receipt;
-}
-
 export async function getUnverifiedLockInfo(wallet: Wallet, contractAddress: string, campaignId: number) {
     let unverifiedLockInfoList: ILockInfo[] = [];
-    let vesting = new ValidVestingVault(wallet, contractAddress);
+    let vesting = new ScomAirdropVault(wallet, contractAddress);
     let locksLength = await vesting.campaignLocksLength(campaignId);
     for (let j = 0; j < locksLength.toNumber(); j++) {
         let lockId = await vesting.campaignLocks({
@@ -78,7 +58,6 @@ export async function getUnverifiedLockInfo(wallet: Wallet, contractAddress: str
         if (!isLockIdVerified) {
             let lockInfo: ILockInfo = {
                 id: lockId.toNumber(),
-                lockType: lockInfoItem.lockType.toNumber(),
                 dataUri: lockInfoItem.dataUri,
                 root: lockInfoItem.root,
                 vestingId: lockInfoItem.vestingId.toNumber(),
@@ -104,7 +83,7 @@ export async function getUnverifiedLockInfoMap(wallet: Wallet, contractAddress: 
 export async function getMyClaims(wallet: Wallet, contractAddress: string, campaignId?: number) {
     let claimsArr: IMyClaims[] = [];
     try {
-        let vesting = new ValidVestingVault(wallet, contractAddress);
+        let vesting = new ScomAirdropVault(wallet, contractAddress);
         let nftCount = await vesting.balanceOf(wallet.address);
         for (let i = 0; i < nftCount.toNumber(); i++) {
             let nftId = await vesting.tokenOfOwnerByIndex({
@@ -142,14 +121,14 @@ export async function getMyClaims(wallet: Wallet, contractAddress: string, campa
 
 export async function doClaim(wallet: Wallet, contractAddress: string, id: number) {
     if (!contractAddress) return;
-    let vesting = new ValidVestingVault(wallet, contractAddress);
+    let vesting = new ScomAirdropVault(wallet, contractAddress);
     let receipt = await vesting.claim(id);
     return receipt;
 }
 
 export async function doClaimAll(wallet: Wallet, contractAddress: string, ids: number[]) {
     if (!contractAddress) return;
-    let vesting = new ValidVestingVault(wallet, contractAddress);
+    let vesting = new ScomAirdropVault(wallet, contractAddress);
     let receipt = await vesting.claimMultiple(ids);
     return receipt;
 }

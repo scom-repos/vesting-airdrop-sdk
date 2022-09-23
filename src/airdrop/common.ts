@@ -1,5 +1,5 @@
 import { BigNumber, Wallet } from "@ijstech/eth-wallet";
-import { ValidVestingVault } from "./contracts";
+import { ScomAirdropVault } from "../contracts";
 
 export interface ILockRecord {
     account: string;
@@ -38,11 +38,8 @@ export interface ICampaignInfo {
     ownerFrozen: boolean;
 }
 
-export enum LockType { Direct, Merkle }
-
 export interface ILockInfo {
     id: number;
-    lockType: LockType;
     vestingId?: number;
     dataUri?: string;
     root?: string;
@@ -50,7 +47,7 @@ export interface ILockInfo {
 }
 
 export async function getCampaignInfo(wallet: Wallet, contractAddress: string, campaignId: number) {
-    let vesting = new ValidVestingVault(wallet, contractAddress);
+    let vesting = new ScomAirdropVault(wallet, contractAddress);
     let info = await vesting.campaignInfo(campaignId);
     let campaignInfo: ICampaignInfo = {
         ...info,
@@ -60,7 +57,7 @@ export async function getCampaignInfo(wallet: Wallet, contractAddress: string, c
 }
 
 export async function getCampaignInfoList(wallet: Wallet, contractAddress: string) {
-    let vesting = new ValidVestingVault(wallet, contractAddress);
+    let vesting = new ScomAirdropVault(wallet, contractAddress);
     let campaignInfoList: ICampaignInfo[] = [];
     let campaignIdCount = await vesting.campaignIdCount();
     for (let i = 1; i <= campaignIdCount.toNumber(); i++) {

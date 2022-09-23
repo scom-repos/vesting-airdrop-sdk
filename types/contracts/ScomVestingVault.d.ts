@@ -7,35 +7,21 @@ export interface IApproveParams {
     to: string;
     tokenId: number | BigNumber;
 }
-export interface ICampaignLocksParams {
-    param1: number | BigNumber;
-    param2: number | BigNumber;
-}
-export interface IDirectLockParams {
-    campaignId: number | BigNumber;
-    recipient: string;
-    amount: number | BigNumber;
-    startDate: number | BigNumber;
-    endDate: number | BigNumber;
-}
 export interface IIsApprovedForAllParams {
     owner: string;
     operator: string;
-}
-export interface IIsLockIdVerifiedParams {
-    param1: string;
-    param2: number | BigNumber;
-}
-export interface IMerkleLockParams {
-    campaignId: number | BigNumber;
-    amount: number | BigNumber;
-    merkleRoot: string;
-    dataUri: string;
 }
 export interface INewCampaignParams {
     token: string;
     ownerFrozen: boolean;
     dataUri: string;
+}
+export interface INewLockParams {
+    campaignId: number | BigNumber;
+    recipient: string;
+    amount: number | BigNumber;
+    startDate: number | BigNumber;
+    endDate: number | BigNumber;
 }
 export interface ISafeTransferFromParams {
     from: string;
@@ -65,47 +51,37 @@ export interface IUpdateCampaignParams {
     campaignId: number | BigNumber;
     dataUri: string;
 }
-export interface IVerifyMerkleLockParams {
-    lockId: number | BigNumber;
-    campaignId: number | BigNumber;
-    amount: number | BigNumber;
-    startDate: number | BigNumber;
-    endDate: number | BigNumber;
-    proof: string[];
-}
 export interface IWithdrawFundParams {
     token: string;
     amount: number | BigNumber;
 }
-export declare class ValidVestingVault extends Contract {
+export declare class ScomVestingVault extends Contract {
     constructor(wallet: IWallet, address?: string);
     deploy(params: IDeployParams): Promise<string>;
-    parseApprovalEvent(receipt: TransactionReceipt): ValidVestingVault.ApprovalEvent[];
-    decodeApprovalEvent(event: Event): ValidVestingVault.ApprovalEvent;
-    parseApprovalForAllEvent(receipt: TransactionReceipt): ValidVestingVault.ApprovalForAllEvent[];
-    decodeApprovalForAllEvent(event: Event): ValidVestingVault.ApprovalForAllEvent;
-    parseAuthorizeEvent(receipt: TransactionReceipt): ValidVestingVault.AuthorizeEvent[];
-    decodeAuthorizeEvent(event: Event): ValidVestingVault.AuthorizeEvent;
-    parseClaimEvent(receipt: TransactionReceipt): ValidVestingVault.ClaimEvent[];
-    decodeClaimEvent(event: Event): ValidVestingVault.ClaimEvent;
-    parseCreateVestingEvent(receipt: TransactionReceipt): ValidVestingVault.CreateVestingEvent[];
-    decodeCreateVestingEvent(event: Event): ValidVestingVault.CreateVestingEvent;
-    parseDeauthorizeEvent(receipt: TransactionReceipt): ValidVestingVault.DeauthorizeEvent[];
-    decodeDeauthorizeEvent(event: Event): ValidVestingVault.DeauthorizeEvent;
-    parseLockEvent(receipt: TransactionReceipt): ValidVestingVault.LockEvent[];
-    decodeLockEvent(event: Event): ValidVestingVault.LockEvent;
-    parseMintEvent(receipt: TransactionReceipt): ValidVestingVault.MintEvent[];
-    decodeMintEvent(event: Event): ValidVestingVault.MintEvent;
-    parseNewCampaignEvent(receipt: TransactionReceipt): ValidVestingVault.NewCampaignEvent[];
-    decodeNewCampaignEvent(event: Event): ValidVestingVault.NewCampaignEvent;
-    parseStartOwnershipTransferEvent(receipt: TransactionReceipt): ValidVestingVault.StartOwnershipTransferEvent[];
-    decodeStartOwnershipTransferEvent(event: Event): ValidVestingVault.StartOwnershipTransferEvent;
-    parseTransferEvent(receipt: TransactionReceipt): ValidVestingVault.TransferEvent[];
-    decodeTransferEvent(event: Event): ValidVestingVault.TransferEvent;
-    parseTransferOwnershipEvent(receipt: TransactionReceipt): ValidVestingVault.TransferOwnershipEvent[];
-    decodeTransferOwnershipEvent(event: Event): ValidVestingVault.TransferOwnershipEvent;
-    parseUpdateCampaignEvent(receipt: TransactionReceipt): ValidVestingVault.UpdateCampaignEvent[];
-    decodeUpdateCampaignEvent(event: Event): ValidVestingVault.UpdateCampaignEvent;
+    parseApprovalEvent(receipt: TransactionReceipt): ScomVestingVault.ApprovalEvent[];
+    decodeApprovalEvent(event: Event): ScomVestingVault.ApprovalEvent;
+    parseApprovalForAllEvent(receipt: TransactionReceipt): ScomVestingVault.ApprovalForAllEvent[];
+    decodeApprovalForAllEvent(event: Event): ScomVestingVault.ApprovalForAllEvent;
+    parseAuthorizeEvent(receipt: TransactionReceipt): ScomVestingVault.AuthorizeEvent[];
+    decodeAuthorizeEvent(event: Event): ScomVestingVault.AuthorizeEvent;
+    parseClaimEvent(receipt: TransactionReceipt): ScomVestingVault.ClaimEvent[];
+    decodeClaimEvent(event: Event): ScomVestingVault.ClaimEvent;
+    parseCreateVestingEvent(receipt: TransactionReceipt): ScomVestingVault.CreateVestingEvent[];
+    decodeCreateVestingEvent(event: Event): ScomVestingVault.CreateVestingEvent;
+    parseDeauthorizeEvent(receipt: TransactionReceipt): ScomVestingVault.DeauthorizeEvent[];
+    decodeDeauthorizeEvent(event: Event): ScomVestingVault.DeauthorizeEvent;
+    parseMintEvent(receipt: TransactionReceipt): ScomVestingVault.MintEvent[];
+    decodeMintEvent(event: Event): ScomVestingVault.MintEvent;
+    parseNewCampaignEvent(receipt: TransactionReceipt): ScomVestingVault.NewCampaignEvent[];
+    decodeNewCampaignEvent(event: Event): ScomVestingVault.NewCampaignEvent;
+    parseStartOwnershipTransferEvent(receipt: TransactionReceipt): ScomVestingVault.StartOwnershipTransferEvent[];
+    decodeStartOwnershipTransferEvent(event: Event): ScomVestingVault.StartOwnershipTransferEvent;
+    parseTransferEvent(receipt: TransactionReceipt): ScomVestingVault.TransferEvent[];
+    decodeTransferEvent(event: Event): ScomVestingVault.TransferEvent;
+    parseTransferOwnershipEvent(receipt: TransactionReceipt): ScomVestingVault.TransferOwnershipEvent[];
+    decodeTransferOwnershipEvent(event: Event): ScomVestingVault.TransferOwnershipEvent;
+    parseUpdateCampaignEvent(receipt: TransactionReceipt): ScomVestingVault.UpdateCampaignEvent[];
+    decodeUpdateCampaignEvent(event: Event): ScomVestingVault.UpdateCampaignEvent;
     approve: {
         (params: IApproveParams): Promise<TransactionReceipt>;
         call: (params: IApproveParams) => Promise<void>;
@@ -129,12 +105,6 @@ export declare class ValidVestingVault extends Contract {
     campaignLocked: {
         (param1: number | BigNumber): Promise<BigNumber>;
     };
-    campaignLocks: {
-        (params: ICampaignLocksParams): Promise<BigNumber>;
-    };
-    campaignLocksLength: {
-        (campaignId: number | BigNumber): Promise<BigNumber>;
-    };
     claim: {
         (id: number | BigNumber): Promise<TransactionReceipt>;
         call: (id: number | BigNumber) => Promise<void>;
@@ -146,10 +116,6 @@ export declare class ValidVestingVault extends Contract {
     deny: {
         (user: string): Promise<TransactionReceipt>;
         call: (user: string) => Promise<void>;
-    };
-    directLock: {
-        (params: IDirectLockParams): Promise<TransactionReceipt>;
-        call: (params: IDirectLockParams) => Promise<BigNumber>;
     };
     factory: {
         (): Promise<string>;
@@ -173,30 +139,11 @@ export declare class ValidVestingVault extends Contract {
     isApprovedForAll: {
         (params: IIsApprovedForAllParams): Promise<boolean>;
     };
-    isLockIdVerified: {
-        (params: IIsLockIdVerifiedParams): Promise<boolean>;
-    };
     isPermitted: {
         (param1: string): Promise<BigNumber>;
     };
-    locks: {
-        (param1: number | BigNumber): Promise<{
-            lockType: BigNumber;
-            vestingId: BigNumber;
-            dataUri: string;
-            root: string;
-            dateCreated: BigNumber;
-        }>;
-    };
-    locksLength: {
-        (): Promise<BigNumber>;
-    };
     maximumAllowedClaimedFunds: {
         (vestingId: number | BigNumber): Promise<BigNumber>;
-    };
-    merkleLock: {
-        (params: IMerkleLockParams): Promise<TransactionReceipt>;
-        call: (params: IMerkleLockParams) => Promise<BigNumber>;
     };
     name: {
         (): Promise<string>;
@@ -204,6 +151,10 @@ export declare class ValidVestingVault extends Contract {
     newCampaign: {
         (params: INewCampaignParams): Promise<TransactionReceipt>;
         call: (params: INewCampaignParams) => Promise<BigNumber>;
+    };
+    newLock: {
+        (params: INewLockParams): Promise<TransactionReceipt>;
+        call: (params: INewLockParams) => Promise<BigNumber>;
     };
     newOwner: {
         (): Promise<string>;
@@ -274,14 +225,6 @@ export declare class ValidVestingVault extends Contract {
         (params: IUpdateCampaignParams): Promise<TransactionReceipt>;
         call: (params: IUpdateCampaignParams) => Promise<void>;
     };
-    verifyDirectLock: {
-        (lockId: number | BigNumber): Promise<TransactionReceipt>;
-        call: (lockId: number | BigNumber) => Promise<BigNumber>;
-    };
-    verifyMerkleLock: {
-        (params: IVerifyMerkleLockParams): Promise<TransactionReceipt>;
-        call: (params: IVerifyMerkleLockParams) => Promise<BigNumber>;
-    };
     vestingClaimedAmount: {
         (param1: number | BigNumber): Promise<BigNumber>;
     };
@@ -304,7 +247,7 @@ export declare class ValidVestingVault extends Contract {
     };
     private assign;
 }
-export declare module ValidVestingVault {
+export declare module ScomVestingVault {
     interface ApprovalEvent {
         owner: string;
         approved: string;
@@ -339,13 +282,6 @@ export declare module ValidVestingVault {
     }
     interface DeauthorizeEvent {
         user: string;
-        _event: Event;
-    }
-    interface LockEvent {
-        lockId: BigNumber;
-        campaignId: BigNumber;
-        amount: BigNumber;
-        sender: string;
         _event: Event;
     }
     interface MintEvent {

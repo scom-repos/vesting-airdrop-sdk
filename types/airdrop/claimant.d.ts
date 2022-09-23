@@ -1,4 +1,4 @@
-import { BigNumber, Wallet } from "@ijstech/eth-wallet";
+import { Wallet } from "@ijstech/eth-wallet";
 import { ILockInfo, IVestingItem } from "./common";
 export interface IMyClaims {
     campaignId: number;
@@ -14,15 +14,6 @@ export interface IMerkleInfo {
     id: number;
     dataUri: string;
     root: string;
-}
-export interface IDirectLockInfo {
-    id: number;
-    campaignId: BigNumber;
-    recipient: string;
-    amount: BigNumber;
-    startDate: BigNumber;
-    endDate: BigNumber;
-    status: BigNumber;
 }
 export declare function doVerifyMerkleLock(wallet: Wallet, contractAddress: string, lockId: number, vestingData: IVestingItem[]): Promise<import("@ijstech/eth-wallet/types/wallet").TransactionReceipt>;
 export declare function getUnverifiedLockInfo(wallet: Wallet, contractAddress: string, campaignId: number): Promise<ILockInfo[]>;

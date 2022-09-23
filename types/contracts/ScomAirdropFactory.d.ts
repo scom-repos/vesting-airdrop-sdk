@@ -1,9 +1,9 @@
 import { IWallet, Contract, TransactionReceipt, BigNumber, Event } from "@ijstech/eth-wallet";
-export declare class ValidVestingVaultFactory extends Contract {
+export declare class ScomAirdropFactory extends Contract {
     constructor(wallet: IWallet, address?: string);
     deploy(): Promise<string>;
-    parseNewProfileEvent(receipt: TransactionReceipt): ValidVestingVaultFactory.NewProfileEvent[];
-    decodeNewProfileEvent(event: Event): ValidVestingVaultFactory.NewProfileEvent;
+    parseNewProfileEvent(receipt: TransactionReceipt): ScomAirdropFactory.NewProfileEvent[];
+    decodeNewProfileEvent(event: Event): ScomAirdropFactory.NewProfileEvent;
     newProfile: {
         (admins: string[]): Promise<TransactionReceipt>;
         call: (admins: string[]) => Promise<BigNumber>;
@@ -11,12 +11,12 @@ export declare class ValidVestingVaultFactory extends Contract {
     profileIdCount: {
         (): Promise<BigNumber>;
     };
-    profileVestingVault: {
+    profileVault: {
         (param1: number | BigNumber): Promise<string>;
     };
     private assign;
 }
-export declare module ValidVestingVaultFactory {
+export declare module ScomAirdropFactory {
     interface NewProfileEvent {
         profileId: BigNumber;
         admins: string[];

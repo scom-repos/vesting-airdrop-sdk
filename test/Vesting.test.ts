@@ -1,7 +1,7 @@
 import 'mocha';
 
 import {Utils, Wallet, Erc20, BigNumber} from "@ijstech/eth-wallet";
-import {Claimant, Contracts, Locker} from '../src';
+import {Contracts, Airdrop} from '../src';
 import * as Ganache from "ganache";
 import * as assert from 'assert';
 
@@ -9,13 +9,13 @@ suite('##Contracts', function() {
     this.timeout(40000);
     let provider = Ganache.provider()        
     let wallet = new Wallet(provider); 
-    let vestingFactory: Contracts.ValidVestingVaultFactory;  
-    let vesting: Contracts.ValidVestingVault;   
+    let vestingFactory: Contracts.ScomAirdropFactory;  
+    let vesting: Contracts.ScomAirdropVault;   
     let accounts: string[];   
     let lockData = [];
     let token1: Erc20;
     async function doClaim() {
-        let myClaims = await Claimant.getMyClaims(wallet, vesting.address);
+        let myClaims = await Airdrop.Claimant.getMyClaims(wallet, vesting.address);
         console.log('myClaims', myClaims)
         for (let i = 0; i < myClaims.length; i++) {
             let receipt = await vesting.claim(myClaims[i].tokenId);
@@ -28,7 +28,7 @@ suite('##Contracts', function() {
     })
     test('Deploy contracts', async function(){
         wallet.defaultAccount = accounts[0];      
-        vestingFactory = new Contracts.ValidVestingVaultFactory(wallet);
+        vestingFactory = new Contracts.ScomAirdropFactory(wallet);
         await vestingFactory.deploy();
         token1 = new Erc20(wallet);
         await token1.deploy({
@@ -45,8 +45,8 @@ suite('##Contracts', function() {
     test('New Profile', async function(){
         wallet.defaultAccount = accounts[0];  
         await vestingFactory.newProfile([accounts[0]]);
-        let vestingAddress = await vestingFactory.profileVestingVault(1);
-        vesting = new Contracts.ValidVestingVault(wallet, vestingAddress);
+        let vestingAddress = await vestingFactory.profileVault(1);
+        vesting = new Contracts.ScomAirdropVault(wallet, vestingAddress);
         let vestingOwner = await vesting.owner();
         assert.strictEqual(vestingOwner, accounts[0]);
         await vesting.newCampaign({
@@ -75,7 +75,7 @@ suite('##Contracts', function() {
                 endDate: 1659534086
             }
         ]
-        let receipt = await Locker.doMerkleLock(
+        let receipt = await Airdrop.Locker.doMerkleLock(
             wallet, 
             vesting.address, 
             1, 
@@ -103,7 +103,7 @@ suite('##Contracts', function() {
                 endDate: 1659534086,
             }
         ]
-        let receipt = await Claimant.doVerifyMerkleLock(
+        let receipt = await Airdrop.Claimant.doVerifyMerkleLock(
             wallet, 
             vesting.address, 
             0,
@@ -128,36 +128,13 @@ suite('##Contracts', function() {
                 endDate: 1659534086,
             }
         ]
-        let receipt = await Claimant.doVerifyMerkleLock(
+        let receipt = await Airdrop.Claimant.doVerifyMerkleLock(
             wallet, 
             vesting.address, 
             0,
             vestingData
         );
     })  
-    test('Direct Lock by account 0', async function(){
-        wallet.defaultAccount = accounts[0];
-        let lockItem = {
-            account: accounts[2],
-            amount: Utils.toDecimals(450).toFixed(),
-            startDate: 1659424086,
-            endDate: 1659534086
-        }
-        await Locker.doDirectLock(wallet, vesting.address, 1, lockItem);
-    }) 
-    test('Verify Direct Lock by account 2', async function(){
-        wallet.defaultAccount = accounts[2];
-        let unverifiedLockInfoMap = await Claimant.getUnverifiedLockInfoMap(
-            wallet, 
-            vesting.address,
-            [1]
-        );
-        let unverifiedLockInfo = unverifiedLockInfoMap[1];
-        for (let i = 0; i < unverifiedLockInfo.length; i++) {
-            let lockId = unverifiedLockInfo[i].id;
-            let receipt = await vesting.verifyDirectLock(lockId);
-        }
-    }) 
     test('Claim tokens by account 1', async function(){
         await wallet.increaseBlockTime(48 * 60 * 60);
         let now = (await wallet.getBlockTimestamp('latest'));
