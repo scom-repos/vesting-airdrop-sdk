@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: GPL-3.0-only
-pragma solidity 0.8.15;
+pragma solidity 0.8.17;
 
 import "./Authorization.sol";
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
@@ -7,11 +7,10 @@ import {ERC721, ERC721Enumerable} from "@openzeppelin/contracts/token/ERC721/ext
 import {SafeERC20} from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
 import { MerkleProof } from '@openzeppelin/contracts/utils/cryptography/MerkleProof.sol';
 
-contract ValidVestingVault is Authorization, ERC721Enumerable {
+contract ScomAirdropVault is Authorization, ERC721Enumerable {
     using SafeERC20 for IERC20;
     
     enum VestingStatus {Active, Inactive}
-    enum LockType {Direct, Merkle}
     struct VestingInfo {
         uint256 campaignId;
         address recipient;
@@ -26,7 +25,6 @@ contract ValidVestingVault is Authorization, ERC721Enumerable {
         bool ownerFrozen;
     }
     struct LockInfo {
-        LockType lockType;
         uint256 vestingId;
         string dataUri;
         bytes32 root;
@@ -125,7 +123,6 @@ contract ValidVestingVault is Authorization, ERC721Enumerable {
         lockId = locks.length;
         campaignLocks[campaignId].push(lockId);
         locks.push(LockInfo({
-            lockType: LockType.Merkle,
             vestingId: 0,
             dataUri: dataUri,
             root: merkleRoot,
@@ -137,29 +134,6 @@ contract ValidVestingVault is Authorization, ERC721Enumerable {
         emit Lock(lockId, campaignId, amount, msg.sender);
     }
     
-    function directLock(
-        uint256 campaignId,
-        address recipient, 
-        uint256 amount,
-        uint256 startDate, 
-        uint256 endDate
-    ) external auth returns (uint256 lockId) {
-        IERC20 token = campaignInfo[campaignId].token;
-        amount = _transferAssetFrom(token, msg.sender, amount);
-        uint256 vestingId = writeVestingData(campaignId, recipient, amount, startDate, endDate); 
-        lockId = locks.length;
-        campaignLocks[campaignId].push(lockId);
-        locks.push(LockInfo({
-            lockType: LockType.Direct,
-            vestingId: vestingId,
-            dataUri: "",
-            root: bytes32(0x00),
-            dateCreated: uint64(block.timestamp)          
-        }));
-        campaignLocked[campaignId] += amount;
-        emit Lock(lockId, campaignId, amount, msg.sender);
-    }
-
     // Functions by recipient
     function verifyMerkleLock(
         uint256 lockId,
@@ -169,7 +143,6 @@ contract ValidVestingVault is Authorization, ERC721Enumerable {
         uint256 endDate,  
         bytes32[] calldata proof
     ) external returns (uint256 nftId) {
-        require(locks[lockId].lockType == LockType.Merkle, "Invalid lock type");
         require(
             MerkleProof.verify(proof, locks[lockId].root, keccak256(
                 abi.encodePacked(
@@ -188,22 +161,6 @@ contract ValidVestingVault is Authorization, ERC721Enumerable {
         nftVestingId[nftId] = vestingId;
         isLockIdVerified[msg.sender][lockId] = true;
         emit Mint(campaignId, nftId, msg.sender);   
-        _safeMint(msg.sender, nftId);
-    }
-
-    function verifyDirectLock(
-        uint256 lockId
-    ) external returns (uint256 nftId) {
-        require(locks[lockId].lockType == LockType.Direct, "Invalid lock type");
-        require(!isLockIdVerified[msg.sender][lockId], "vestingId already verified");
-        uint256 vestingId = locks[lockId].vestingId; 
-        VestingInfo memory info = vestingInfo[vestingId];
-        require(msg.sender == info.recipient, "Recipient not match");
-        nftId = nftIdCount;
-        nftIdCount += 1; 
-        nftVestingId[nftId] = vestingId;
-        isLockIdVerified[msg.sender][lockId] = true;
-        emit Mint(info.campaignId, nftId, msg.sender);   
         _safeMint(msg.sender, nftId);
     }
 
